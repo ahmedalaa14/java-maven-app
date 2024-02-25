@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven'
+    }
+    stages{
+        stage("build jar") {
+            steps{
+                script{
+                    echo "Building the application .."
+                    sh"mvn package"
+                }
+            }
+        }
+        stage('build image') {
+            steps{
+                script{
+                    echo "buliding the docker image .."
+                    withCredentails([usernamePassword(credentialsId: 'DockerHub-Credentail', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+                        sh "docker login -u $USERNAME -p $PASSWORD"
+                        sh "docker build -t ahmedalaa14/demo-app:1.0 . "
+                        sh "docker push ahmedalaa14/demo-app:1.0"
+                    }
+                }
+            }
+        }
+        stage('deploy') {
+            steps{
+                script{
+                    echo "Deploying the application .."
+                }
+            }
+        }
+    }
+}
