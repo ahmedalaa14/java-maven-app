@@ -22,7 +22,7 @@ pipeline {
         stage("build image") {
             steps {
                 script {
-                    buildImage()
+                    buildImage ahmedalaa14/demo-app:jma-2.0
                 }
             }
         }
